@@ -7,9 +7,14 @@ import org.bukkit.Bukkit;
 import org.bukkit.plugin.IllegalPluginAccessException;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
+
 public class S {
 
     private static final DecentHolograms DECENT_HOLOGRAMS = DecentHologramsAPI.get();
+    private static final ScheduledExecutorService EXECUTOR_SERVICE = Executors.newScheduledThreadPool(2);
 
     public static void stopTask(int id) {
         Bukkit.getScheduler().cancelTask(id);
@@ -28,19 +33,11 @@ public class S {
     }
 
     public static void async(Runnable runnable) {
-        try {
-            Bukkit.getScheduler().runTaskAsynchronously(DECENT_HOLOGRAMS.getPlugin(), runnable);
-        } catch (IllegalPluginAccessException e) {
-            DExecutor.execute(runnable);
-        }
+        EXECUTOR_SERVICE.execute(runnable);
     }
 
     public static void async(Runnable runnable, long delay) {
-        try {
-            Bukkit.getScheduler().runTaskLaterAsynchronously(DECENT_HOLOGRAMS.getPlugin(), runnable, delay);
-        } catch (IllegalPluginAccessException e) {
-            DExecutor.execute(runnable);
-        }
+        EXECUTOR_SERVICE.schedule(runnable, delay * 50, TimeUnit.MILLISECONDS);
     }
 
     public static BukkitTask asyncTask(Runnable runnable, long interval) {
