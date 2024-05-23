@@ -43,6 +43,9 @@ defaults:
   # Default value of Down Origin
   down-origin: false
 
+# Thread pool size
+pool-size: 4
+
 # Check for updates on plugin startup? [true/false]
 update-checker: true
 
